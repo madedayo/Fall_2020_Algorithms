@@ -31,10 +31,9 @@ def local_maximum(B, p, r):
 
 def local_maximum_2d(A, left, right, top, bottom):
 
-    mid_row = (bottom + top + 1) // 2
-
+    mid_row = (bottom + top) // 2
     column_maximum_index = local_maximum(A[mid_row, left:right+1], left, right)
-	# check that we are not on the either top or bottom edge of the array:
+
     if mid_row > top and mid_row < bottom:
         if (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
             print('Local maximum is found.')
@@ -46,24 +45,38 @@ def local_maximum_2d(A, left, right, top, bottom):
             print('Move down in rows')
             print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
 
-            top = mid_row
+            top = mid_row +1
             x, y = local_maximum_2d(A, left, right, top, bottom)
 
         elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) < 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
             print('Move up in rows')
             print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
 
-            bottom = mid_row
+            bottom = mid_row - 1
             x, y = local_maximum_2d(A, left, right, top, bottom)
     else:
         if mid_row != bottom:
-            return top, column_maximum_index
+            if (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
+                return mid_row, column_maximum_index
+            
+            elif (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) < 0:
+                top = mid_row+1
+                x, y = local_maximum_2d(A, left, right, top, bottom)
         
         elif mid_row != top:
+            if (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0:
+                return mid_row, column_maximum_index
+            
+            elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) < 0:
+                bottom = mid_row-1
+                x, y = local_maximum_2d(A, left, right, top, bottom)
+            return bottom, column_maximum_index
+        
+        elif top == bottom:
+            
             return bottom, column_maximum_index
 
     return x, y
-
 
 if __name__ == '__main__':
         # A = np.array([[1,2,5,4,2,1], [1,55,4,2,1,0], [1,2,7,3,1,0],[1,25,12,10,6,3], [3,7,6,5,4,3]],  ndmin=2)
