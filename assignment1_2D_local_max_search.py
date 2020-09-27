@@ -1,23 +1,24 @@
-def local_maximum(A, p, r):
+def local_maximum(B, p, r):
     mid = (r + p + 1) // 2
     print(f'p={p}, r={r}, mid={mid}')
     
     if (mid < r) and (mid > p):
-        if (A[mid]-A[mid-1]) > 0 and (A[mid]-A[mid+1]) > 0:
+
+        if (B[mid]-B[mid-1] > 0) and (B[mid]-B[mid+1] > 0):
             print(f'p={p}, r={r}, mid={mid}')
             return mid    
 
-        elif A[mid]-A[mid-1] > 0:
+        elif (B[mid]-B[mid-1] > 0) and (B[mid]-B[mid+1] < 0):
             print('Going right')
             print(f'p={p}, r={r}, mid={mid}')
             p = mid
-            x = local_maximum(A, p, r)
+            x = local_maximum(B, p, r)
 
-        elif A[mid]-A[mid+1] > 0:
+        elif (B[mid]-B[mid+1] > 0) and (B[mid]-B[mid-1] < 0):
             print('Going left')
             print(f'p={p}, r={r}, mid={mid}')
             r = mid
-            x = local_maximum(A, p, r)
+            x = local_maximum(B, p, r)
             
     else:
         if (mid == r) and (p != 0):
@@ -30,33 +31,37 @@ def local_maximum(A, p, r):
 
 def local_maximum_2d(A, left, right, top, bottom):
 
-    mid_row = (bottom + top) // 2
-    
-    print(f'mid row={mid_row}')
-    print(f'left={left}, right={right}')
+    mid_row = (bottom + top + 1) // 2
 
     column_maximum_index = local_maximum(A[mid_row, left:right+1], left, right)
-        
-    if (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
-        print('Local maximum is found.')
-        print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
+	# check that we are not on the either top or bottom edge of the array:
+    if mid_row > top and mid_row < bottom:
+        if (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
+            print('Local maximum is found.')
+            print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
 
-        return mid_row, column_maximum_index
-    
-    elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) < 0:
-        print('Move down in rows')
-        print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
+            return mid_row, column_maximum_index
+
+        elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) > 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) < 0:
+            print('Move down in rows')
+            print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
+
+            top = mid_row
+            x, y = local_maximum_2d(A, left, right, top, bottom)
+
+        elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) < 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
+            print('Move up in rows')
+            print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
+
+            bottom = mid_row
+            x, y = local_maximum_2d(A, left, right, top, bottom)
+    else:
+        if mid_row != bottom:
+            return top, column_maximum_index
         
-        top = mid_row
-        x, y = local_maximum_2d(A, left, right, top, bottom)
-    
-    elif (A[mid_row, column_maximum_index] - A[mid_row-1, column_maximum_index]) < 0 and (A[mid_row, column_maximum_index] - A[mid_row+1, column_maximum_index]) > 0:
-        print('Move up in rows')
-        print(f'row={mid_row}, left={left}, right={right}, max_index_col={column_maximum_index}')
-        
-        bottom = mid_row
-        x, y = local_maximum_2d(A, left, right, top, bottom)
-        
+        elif mid_row != top:
+            return bottom, column_maximum_index
+
     return x, y
 
 
