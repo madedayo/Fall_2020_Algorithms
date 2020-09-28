@@ -30,7 +30,7 @@ def local_maximum(B, p, r):
     return x
 
 def local_maximum_2d(A, left, right, top, bottom):
-
+	# Current implementation also solves cases when the local maximum is located in the one of the border rows/columns.
     mid_row = (bottom + top) // 2
     column_maximum_index = local_maximum(A[mid_row, left:right+1], left, right)
 
