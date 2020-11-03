@@ -22,9 +22,6 @@ def bst_walk(x, pred):
     
 
 if __name__ == "__main__":
-    # Create initial -ingf node:
-    prev = Node(float('-inf'), None, None)
-    
     # Create a false sample BST tree:
     test_not_bst = Node(3, None, None)
     node1 = Node(1, None, None)
@@ -33,6 +30,7 @@ if __name__ == "__main__":
     node9 = Node(9, None, None)
     
     test_not_bst = Node(3, node1, Node(7, Node(4, node1, Node(5, node0, node9)), node8))
+    # Create initial -inf node:
     prev = Node(float('-inf'), None, None)
     print(f'{bst_walk(test_not_bst, prev)}')
     
@@ -43,5 +41,6 @@ if __name__ == "__main__":
     node9 = Node(9, None, None)
 
     true_bst_tree = Node(5, Node(3, node1, node4), Node(6, None, Node(10, node9, node11)))
+    # Create initial -inf node:
     prev = Node(float('-inf'), None, None)
     print(f'{bst_walk(true_bst_tree, prev)}')
